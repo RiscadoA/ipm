@@ -30,6 +30,7 @@ let current_trial = 0; // the current trial number (indexes into trials array ab
 let attempt = 0; // users complete each test twice to account for practice (attemps 0 and 1)
 let fitts_IDs = []; // add the Fitts ID for each selection here (-1 when there is a miss)
 let last_mouse_press; // last mouse press position
+let missed = false; // whether the user has missed the previous target
 
 // Target class (position and width)
 class Target {
@@ -55,7 +56,11 @@ function setup() {
 function draw() {
   if (draw_targets) {
     // The user is interacting with the 6x3 target grid
-    background(color(0, 0, 0)); // sets background to black
+    if (missed) {
+      background(color(35, 0, 0)); // sets background to a dark red
+    } else {
+      background(color(0, 0, 0)); // sets background to black
+    }
 
     // Print trial count at the top left-corner of the canvas
     fill(color(255, 255, 255));
@@ -224,6 +229,7 @@ function mousePressed() {
       );
 
       if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2) {
+        missed = false;
         if (current_trial === 0) {
           fitts_IDs.push(0);
         } else {
@@ -238,6 +244,7 @@ function mousePressed() {
         }
         hits++;
       } else {
+        missed = true;
         fitts_IDs.push(-1);
         misses++;
       }
