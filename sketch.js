@@ -8,7 +8,7 @@
 // Database (CHANGE THESE!)
 const GROUP_NUMBER = 48; // Add your group number here as an integer (e.g., 2, 3)
 const BAKE_OFF_DAY = false; // Set to 'true' before sharing during the bake-off day
-const ITERATION = 1;
+const ITERATION = 2;
 
 // Target and grid properties (DO NOT CHANGE!)
 let PPI, PPCM;
@@ -30,6 +30,9 @@ let current_trial = 0; // the current trial number (indexes into trials array ab
 let attempt = 0; // users complete each test twice to account for practice (attemps 0 and 1)
 let fitts_IDs = []; // add the Fitts ID for each selection here (-1 when there is a miss)
 let last_mouse_press; // last mouse press position
+let missed = false; // whether the user has missed the previous target
+let hitSound;
+let missSound;
 
 // Target class (position and width)
 class Target {
@@ -49,13 +52,20 @@ function setup() {
 
   textFont("Arial", 18); // font size for the majority of the text
   drawUserIDScreen(); // draws the user start-up screen (student ID and display size)
+
+  hitSound = loadSound("assets/hit.wav");
+  missSound = loadSound("assets/miss.mp3");
 }
 
 // Runs every frame and redraws the screen
 function draw() {
   if (draw_targets) {
     // The user is interacting with the 6x3 target grid
-    background(color(0, 0, 0)); // sets background to black
+    if (missed) {
+      background(color(35, 0, 0)); // sets background to a dark red
+    } else {
+      background(color(0, 0, 0)); // sets background to black
+    }
 
     // Print trial count at the top left-corner of the canvas
     fill(color(255, 255, 255));
@@ -139,7 +149,22 @@ function printAndSavePerformance() {
   );
 
   // Print Fitts IDS (one per target, -1 if failed selection, optional)
-  text("Fitts IDS: " + fitts_IDs);
+  text("Fitts IDS", width / 2, 260);
+  textAlign(CENTER);
+  for (var i = 0; i < fitts_IDs.length / 2; i++) {
+    text(
+      "Target " + (i + 1).toString() + ": " + fitts_IDs[i].toString(),
+      width / 4,
+      280 + 20 * i
+    );
+  }
+  for (var i = fitts_IDs.length / 2; i < fitts_IDs.length; i++) {
+    text(
+      "Target " + (i + 1).toString() + ": " + fitts_IDs[i].toString(),
+      width - width / 4,
+      280 + 20 * (i - fitts_IDs.length / 2)
+    );
+  }
 
   // Saves results (DO NOT CHANGE!)
   let attempt_data = {
@@ -209,6 +234,8 @@ function mousePressed() {
       );
 
       if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2) {
+        missed = false;
+        hitSound.play();
         if (current_trial === 0) {
           fitts_IDs.push(0);
         } else {
@@ -223,6 +250,8 @@ function mousePressed() {
         }
         hits++;
       } else {
+        missed = true;
+        missSound.play();
         fitts_IDs.push(-1);
         misses++;
       }
@@ -279,6 +308,17 @@ function drawTarget(i) {
   // Draws the target
   fill(color(155, 155, 155));
   circle(target.x, target.y, target.w);
+
+  if (trials[current_trial] === i && trials[current_trial + 1] === i) {
+    fill(color(255, 255, 255));
+    stroke(color(0, 0, 0));
+    textAlign(CENTER, CENTER);
+    textSize(24);
+    textStyle(BOLD);
+    text("2X", target.x, target.y);
+    textStyle(NORMAL);
+    textSize(18);
+  }
 }
 
 // Returns the location and size of a given target
