@@ -72,12 +72,6 @@ function draw() {
     textAlign(LEFT);
     text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
 
-    // Draw all 18 targets
-    for (var i = 0; i < 18; i++) drawTarget(i);
-
-    // Draw the user input area
-    drawInputArea();
-
     // Get virtual cursor's position
     let x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width);
     let y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height);
@@ -86,15 +80,23 @@ function draw() {
     // and from the current to the next.
     let current_target = getTargetBounds(trials[current_trial]);
     stroke(color(255, 255, 255));
+    strokeWeight(10);
     line(x, y, current_target.x, current_target.y);
     if (current_trial + 1 < trials.length) {
       let next_target = getTargetBounds(trials[current_trial + 1]);
       stroke(color(255, 255, 255, 50));
+      strokeWeight(5);
       line(current_target.x, current_target.y, next_target.x, next_target.y);
     }
     noStroke();
 
     let next_target = getTargetBounds(trials[current_trial + 1]);
+    
+    // Draw all 18 targets
+    for (var i = 0; i < 18; i++) drawTarget(i);
+
+    // Draw the user input area
+    drawInputArea();
 
     // Draw the virtual cursor
     fill(color(255, 255, 255));
@@ -153,14 +155,14 @@ function printAndSavePerformance() {
   textAlign(CENTER);
   for (var i = 0; i < fitts_IDs.length / 2; i++) {
     text(
-      "Target " + (i + 1).toFixed(2) + ": " + fitts_IDs[i].toFixed(2),
+      "Target " + (i + 1).toString() + ": " + fitts_IDs[i].toFixed(2),
       width / 4,
       280 + 20 * i
     );
   }
   for (var i = fitts_IDs.length / 2; i < fitts_IDs.length; i++) {
     text(
-      "Target " + (i + 1).toFixed(2) + ": " + fitts_IDs[i].toFixed(2),
+      "Target " + (i + 1).toString() + ": " + fitts_IDs[i].toFixed(2),
       width - width / 4,
       280 + 20 * (i - fitts_IDs.length / 2)
     );
