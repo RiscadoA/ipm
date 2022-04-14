@@ -8,7 +8,7 @@
 // Database (CHANGE THESE!)
 const GROUP_NUMBER = 48; // Add your group number here as an integer (e.g., 2, 3)
 const BAKE_OFF_DAY = false; // Set to 'true' before sharing during the bake-off day
-const ITERATION = 2;
+const ITERATION = 3;
 
 // Target and grid properties (DO NOT CHANGE!)
 let PPI, PPCM;
@@ -287,26 +287,20 @@ function drawTarget(i) {
   // Get the location and size for target (i)
   let target = getTargetBounds(i);
 
-  // Check whether this target is the target the user should be trying to select
   if (trials[current_trial] === i) {
-    // Highlights the target the user should be trying to select
-    // with a white border
     stroke(color(0, 255, 0));
     strokeWeight(4);
-
-    // Remember you are allowed to access targets (i-1) and (i+1)
-    // if this is the target the user should be trying to select
-    //
+    fill(color(150, 200, 150));
   } else if (trials[current_trial + 1] === i) {
-    stroke(color(255, 0, 0));
-    strokeWeight(2);
+    noStroke();
+    fill(color(50, 97, 50));
   }
-  // Does not draw a border if this is not the target the user
-  // should be trying to select
-  else noStroke();
+  else {
+    noStroke();
+    fill(color(119, 119, 119));
+  }
 
   // Draws the target
-  fill(color(155, 155, 155));
   circle(target.x, target.y, target.w);
 
   if (trials[current_trial] === i && trials[current_trial + 1] === i) {
