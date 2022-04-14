@@ -8,7 +8,7 @@
 // Database (CHANGE THESE!)
 const GROUP_NUMBER = 48; // Add your group number here as an integer (e.g., 2, 3)
 const BAKE_OFF_DAY = false; // Set to 'true' before sharing during the bake-off day
-const ITERATION = 1;
+const ITERATION = 2;
 
 // Target and grid properties (DO NOT CHANGE!)
 let PPI, PPCM;
@@ -308,6 +308,17 @@ function drawTarget(i) {
   // Draws the target
   fill(color(155, 155, 155));
   circle(target.x, target.y, target.w);
+
+  if (trials[current_trial] === i && trials[current_trial + 1] === i) {
+    fill(color(255, 255, 255));
+    stroke(color(0, 0, 0));
+    textAlign(CENTER, CENTER);
+    textSize(24);
+    textStyle(BOLD);
+    text("2X", target.x, target.y);
+    textStyle(NORMAL);
+    textSize(18);
+  }
 }
 
 // Returns the location and size of a given target
