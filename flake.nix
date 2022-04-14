@@ -13,6 +13,7 @@
             nativeBuildInputs = [
               clang-tools
               nodejs
+              python
             ];
           };
         }
