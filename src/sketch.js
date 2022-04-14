@@ -153,14 +153,14 @@ function printAndSavePerformance() {
   textAlign(CENTER);
   for (var i = 0; i < fitts_IDs.length / 2; i++) {
     text(
-      "Target " + (i + 1).toString() + ": " + fitts_IDs[i].toString(),
+      "Target " + (i + 1).toFixed(2) + ": " + fitts_IDs[i].toFixed(2),
       width / 4,
       280 + 20 * i
     );
   }
   for (var i = fitts_IDs.length / 2; i < fitts_IDs.length; i++) {
     text(
-      "Target " + (i + 1).toString() + ": " + fitts_IDs[i].toString(),
+      "Target " + (i + 1).toFixed(2) + ": " + fitts_IDs[i].toFixed(2),
       width - width / 4,
       280 + 20 * (i - fitts_IDs.length / 2)
     );
