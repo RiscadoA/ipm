@@ -31,6 +31,8 @@ let attempt = 0; // users complete each test twice to account for practice (atte
 let fitts_IDs = []; // add the Fitts ID for each selection here (-1 when there is a miss)
 let last_mouse_press; // last mouse press position
 let missed = false; // whether the user has missed the previous target
+let hitSound;
+let missSound;
 
 // Target class (position and width)
 class Target {
@@ -50,6 +52,9 @@ function setup() {
 
   textFont("Arial", 18); // font size for the majority of the text
   drawUserIDScreen(); // draws the user start-up screen (student ID and display size)
+
+  hitSound = loadSound("assets/hit.wav");
+  missSound = loadSound("assets/miss.mp3");
 }
 
 // Runs every frame and redraws the screen
@@ -230,6 +235,7 @@ function mousePressed() {
 
       if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2) {
         missed = false;
+        hitSound.play();
         if (current_trial === 0) {
           fitts_IDs.push(0);
         } else {
@@ -245,6 +251,7 @@ function mousePressed() {
         hits++;
       } else {
         missed = true;
+        missSound.play();
         fitts_IDs.push(-1);
         misses++;
       }
