@@ -139,7 +139,22 @@ function printAndSavePerformance() {
   );
 
   // Print Fitts IDS (one per target, -1 if failed selection, optional)
-  text("Fitts IDS: " + fitts_IDs);
+  text("Fitts IDS", width / 2, 260);
+  textAlign(CENTER);
+  for (var i = 0; i < fitts_IDs.length / 2; i++) {
+    text(
+      "Target " + (i + 1).toString() + ": " + fitts_IDs[i].toString(),
+      width / 4,
+      280 + 20 * i
+    );
+  }
+  for (var i = fitts_IDs.length / 2; i < fitts_IDs.length; i++) {
+    text(
+      "Target " + (i + 1).toString() + ": " + fitts_IDs[i].toString(),
+      width - width / 4,
+      280 + 20 * (i - fitts_IDs.length / 2)
+    );
+  }
 
   // Saves results (DO NOT CHANGE!)
   let attempt_data = {
