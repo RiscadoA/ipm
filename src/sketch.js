@@ -8,7 +8,7 @@
 // Database (CHANGE THESE!)
 const GROUP_NUMBER = 48; // Add your group number here as an integer (e.g., 2, 3)
 const BAKE_OFF_DAY = false; // Set to 'true' before sharing during the bake-off day
-const ITERATION = 4;
+const ITERATION = 5;
 
 // Target and grid properties (DO NOT CHANGE!)
 let PPI, PPCM;
@@ -291,18 +291,28 @@ function drawTarget(i) {
     fill(color(119, 119, 119));
   }
 
+  let box = {
+    x: target.x - target.w / 2 - TARGET_PADDING / 2,
+    y: target.y - target.w / 2 - TARGET_PADDING / 2,
+    w: target.w + TARGET_PADDING,
+  };
+
   // Draws the target
   circle(target.x, target.y, target.w);
+
+  // Draw the input area target
+  noStroke();
+  rect(
+    map(box.x, 0, width, inputArea.x, inputArea.x + inputArea.w) + 1,
+    map(box.y, 0, height, inputArea.y, inputArea.y + inputArea.h) + 1,
+    map(box.w, 0, width, 0, inputArea.w) - 2
+  );
 
   // Draw the snap box around the target
   fill(color(0, 0, 0, 0));
   stroke(color(255, 255, 255));
   strokeWeight(1);
-  rect(
-    target.x - target.w / 2 - TARGET_PADDING / 2,
-    target.y - target.w / 2 - TARGET_PADDING / 2,
-    target.w + TARGET_PADDING
-  );
+  rect(box.x, box.y, box.w);
 
   if (trials[current_trial] === i && trials[current_trial + 1] === i) {
     fill(color(255, 255, 255));
@@ -311,6 +321,9 @@ function drawTarget(i) {
     textSize(24);
     textStyle(BOLD);
     text("2X", target.x, target.y);
+    textSize(18);
+    textStyle(BOLD);
+    text("2X", map(target.x, 0, width, inputArea.x, inputArea.x + inputArea.w), map(target.y, 0, height, inputArea.y, inputArea.y + inputArea.h));
     textStyle(NORMAL);
     textSize(18);
   }
