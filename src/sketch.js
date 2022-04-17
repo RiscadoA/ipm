@@ -298,7 +298,11 @@ function drawTarget(i) {
   fill(color(0, 0, 0, 0));
   stroke(color(255, 255, 255));
   strokeWeight(1);
-  rect(target.x - target.w / 2 - TARGET_PADDING / 2, target.y - target.w / 2 - TARGET_PADDING / 2, target.w + TARGET_PADDING);
+  rect(
+    target.x - target.w / 2 - TARGET_PADDING / 2,
+    target.y - target.w / 2 - TARGET_PADDING / 2,
+    target.w + TARGET_PADDING
+  );
 
   if (trials[current_trial] === i && trials[current_trial + 1] === i) {
     fill(color(255, 255, 255));
