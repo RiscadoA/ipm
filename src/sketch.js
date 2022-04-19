@@ -227,6 +227,7 @@ function mousePressed() {
 
       if (dist(target.x, target.y, snapped.x, snapped.y) < target.w / 2) {
         missed = false;
+        hitSound.setVolume(0.2);
         hitSound.play();
         if (current_trial === 0) {
           fitts_IDs.push(0);
@@ -243,6 +244,7 @@ function mousePressed() {
         hits++;
       } else {
         missed = true;
+        missSound.setVolume(0.2);
         missSound.play();
         fitts_IDs.push(-1);
         misses++;
