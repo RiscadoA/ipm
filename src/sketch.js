@@ -8,7 +8,7 @@
 // Database (CHANGE THESE!)
 const GROUP_NUMBER = 48; // Add your group number here as an integer (e.g., 2, 3)
 const BAKE_OFF_DAY = false; // Set to 'true' before sharing during the bake-off day
-const ITERATION = 3;
+const ITERATION = 4;
 
 // Target and grid properties (DO NOT CHANGE!)
 let PPI, PPCM;
@@ -72,16 +72,16 @@ function draw() {
     textAlign(LEFT);
     text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
 
-    // Get virtual cursor's position
-    let x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width);
-    let y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height);
+    // Get virtual and snapped cursor's positions.
+    let virtual = getVirtualMouse();
+    let snapped = getSnappedMouse();
 
     // Draw line from the virtual cursor to the current target,
     // and from the current to the next.
     let current_target = getTargetBounds(trials[current_trial]);
     stroke(color(255, 255, 255));
     strokeWeight(10);
-    line(x, y, current_target.x, current_target.y);
+    line(snapped.x, snapped.y, current_target.x, current_target.y);
     if (current_trial + 1 < trials.length) {
       let next_target = getTargetBounds(trials[current_trial + 1]);
       stroke(color(255, 255, 255, 50));
@@ -91,7 +91,7 @@ function draw() {
     noStroke();
 
     let next_target = getTargetBounds(trials[current_trial + 1]);
-    
+
     // Draw all 18 targets
     for (var i = 0; i < 18; i++) drawTarget(i);
 
@@ -100,7 +100,10 @@ function draw() {
 
     // Draw the virtual cursor
     fill(color(255, 255, 255));
-    circle(x, y, 0.5 * PPCM);
+    circle(virtual.x, virtual.y, 0.5 * PPCM);
+
+    fill(color(255, 255, 255, 50));
+    circle(snapped.x, snapped.y, 0.5 * PPCM);
   }
 }
 
@@ -220,22 +223,9 @@ function mousePressed() {
     // increasing either the 'hits' or 'misses' counters
 
     if (insideInputArea(mouseX, mouseY)) {
-      let virtual_x = map(
-        mouseX,
-        inputArea.x,
-        inputArea.x + inputArea.w,
-        0,
-        width
-      );
-      let virtual_y = map(
-        mouseY,
-        inputArea.y,
-        inputArea.y + inputArea.h,
-        0,
-        height
-      );
+      let snapped = getSnappedMouse();
 
-      if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2) {
+      if (dist(target.x, target.y, snapped.x, snapped.y) < target.w / 2) {
         missed = false;
         hitSound.play();
         if (current_trial === 0) {
@@ -258,7 +248,7 @@ function mousePressed() {
         misses++;
       }
 
-      last_mouse_press = { x: virtual_x, y: virtual_y };
+      last_mouse_press = snapped;
       current_trial++; // Move on to the next trial/target
     }
 
@@ -296,14 +286,23 @@ function drawTarget(i) {
   } else if (trials[current_trial + 1] === i) {
     noStroke();
     fill(color(50, 97, 50));
-  }
-  else {
+  } else {
     noStroke();
     fill(color(119, 119, 119));
   }
 
   // Draws the target
   circle(target.x, target.y, target.w);
+
+  // Draw the snap box around the target
+  fill(color(0, 0, 0, 0));
+  stroke(color(255, 255, 255));
+  strokeWeight(1);
+  rect(
+    target.x - target.w / 2 - TARGET_PADDING / 2,
+    target.y - target.w / 2 - TARGET_PADDING / 2,
+    target.w + TARGET_PADDING
+  );
 
   if (trials[current_trial] === i && trials[current_trial + 1] === i) {
     fill(color(255, 255, 255));
@@ -315,6 +314,29 @@ function drawTarget(i) {
     textStyle(NORMAL);
     textSize(18);
   }
+}
+
+// Returns the position of the virtual cursor.
+function getVirtualMouse() {
+  return {
+    x: map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width),
+    y: map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height),
+  };
+}
+
+// Returns the position of the snapped cursor.
+function getSnappedMouse() {
+  let virtual = getVirtualMouse();
+  for (var i = 0; i < 18; i++) {
+    let target = getTargetBounds(i);
+    if (
+      Math.abs(virtual.x - target.x) < TARGET_PADDING / 2 + TARGET_SIZE / 2 &&
+      Math.abs(virtual.y - target.y) < TARGET_PADDING / 2 + TARGET_SIZE / 2
+    ) {
+      return { x: target.x, y: target.y };
+    }
+  }
+  return virtual;
 }
 
 // Returns the location and size of a given target
