@@ -54,7 +54,7 @@ function setup() {
   drawUserIDScreen(); // draws the user start-up screen (student ID and display size)
 
   hitSound = loadSound("assets/hit.wav");
-  missSound = loadSound("assets/miss.mp3");
+  missSound = loadSound("assets/miss.wav");
 }
 
 // Runs every frame and redraws the screen
@@ -246,6 +246,7 @@ function mousePressed() {
         missed = true;
         missSound.setVolume(0.2);
         missSound.play();
+        missSound.jump(0.5);
         fitts_IDs.push(-1);
         misses++;
       }
