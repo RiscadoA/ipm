@@ -8,7 +8,7 @@
 // Database (CHANGE THESE!)
 const GROUP_NUMBER = 48; // Add your group number here as an integer (e.g., 2, 3)
 const BAKE_OFF_DAY = false; // Set to 'true' before sharing during the bake-off day
-const ITERATION = 5;
+const ITERATION = 6;
 
 // Target and grid properties (DO NOT CHANGE!)
 let PPI, PPCM;
@@ -97,6 +97,9 @@ function draw() {
 
     // Draw the user input area
     drawInputArea();
+
+    // Draws the help guide.
+    drawGuide();
 
     // Draw the virtual cursor
     fill(color(255, 255, 255));
@@ -281,11 +284,17 @@ function mousePressed() {
 function drawTarget(i) {
   // Get the location and size for target (i)
   let target = getTargetBounds(i);
+  let snapped = getSnappedMouse();
 
   if (trials[current_trial] === i) {
-    stroke(color(0, 255, 0));
     strokeWeight(4);
-    fill(color(150, 200, 150));
+    if (dist(target.x, target.y, snapped.x, snapped.y) < target.w / 2) {
+      stroke(color(0, 255, 0));
+      fill(color(150, 255, 150));
+    } else {
+      stroke(color(0, 255, 0));
+      fill(color(150, 200, 150));
+    }
   } else if (trials[current_trial + 1] === i) {
     noStroke();
     fill(color(50, 97, 50));
@@ -304,7 +313,6 @@ function drawTarget(i) {
   circle(target.x, target.y, target.w);
 
   // Draw the input area target
-  noStroke();
   rect(
     map(box.x, 0, width, inputArea.x, inputArea.x + inputArea.w) + 1,
     map(box.y, 0, height, inputArea.y, inputArea.y + inputArea.h) + 1,
@@ -326,7 +334,11 @@ function drawTarget(i) {
     text("2X", target.x, target.y);
     textSize(18);
     textStyle(BOLD);
-    text("2X", map(target.x, 0, width, inputArea.x, inputArea.x + inputArea.w), map(target.y, 0, height, inputArea.y, inputArea.y + inputArea.h));
+    text(
+      "2X",
+      map(target.x, 0, width, inputArea.x, inputArea.x + inputArea.w),
+      map(target.y, 0, height, inputArea.y, inputArea.y + inputArea.h)
+    );
     textStyle(NORMAL);
     textSize(18);
   }
@@ -424,4 +436,52 @@ function drawInputArea() {
   strokeWeight(2);
 
   rect(inputArea.x, inputArea.y, inputArea.w, inputArea.h);
+}
+
+// Responsible for drawing the guide
+function drawGuide() {
+  let origin = {
+    x: inputArea.x + TARGET_SIZE,
+    y: inputArea.y - TARGET_SIZE * 1,
+  };
+
+  // Current target
+  stroke(color(0, 255, 0));
+  strokeWeight(4);
+  fill(color(150, 200, 150));
+  circle(origin.x, origin.y, TARGET_SIZE);
+
+  // Double click target
+  circle(origin.x + TARGET_SIZE * 6, origin.y, TARGET_SIZE);
+  fill(color(255, 255, 255));
+  stroke(color(0, 0, 0));
+  textAlign(CENTER, CENTER);
+  textSize(24);
+  textStyle(BOLD);
+  text("2X", origin.x + TARGET_SIZE * 6, origin.y);
+  textSize(18);
+
+  // Next target
+  noStroke();
+  fill(color(50, 97, 50));
+  circle(origin.x + TARGET_SIZE * 3, origin.y, TARGET_SIZE);
+
+  fill(color(255, 255, 255));
+  noStroke();
+  text("Current Target", origin.x, origin.y - TARGET_SIZE);
+  text("Next Target", origin.x + TARGET_SIZE * 3, origin.y - TARGET_SIZE);
+  text("Double Click", origin.x + TARGET_SIZE * 6, origin.y - TARGET_SIZE);
+
+  // Hints
+  textSize(20);
+  text(
+    "Using the rectangle above can get you better scores!",
+    origin.x + TARGET_SIZE * 3,
+    inputArea.y + inputArea.h + 22
+  );
+  text(
+    "If you miss more than 2 times, you'll be heavily penalized, so be careful!",
+    origin.x + TARGET_SIZE * 3,
+    inputArea.y + inputArea.h + 42
+  );
 }
