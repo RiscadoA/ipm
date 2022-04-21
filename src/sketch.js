@@ -284,11 +284,17 @@ function mousePressed() {
 function drawTarget(i) {
   // Get the location and size for target (i)
   let target = getTargetBounds(i);
+  let snapped = getSnappedMouse();
 
   if (trials[current_trial] === i) {
-    stroke(color(0, 255, 0));
     strokeWeight(4);
-    fill(color(150, 200, 150));
+    if (dist(target.x, target.y, snapped.x, snapped.y) < target.w / 2) {
+      stroke(color(0, 255, 0));
+      fill(color(150, 255, 150));
+    } else {
+      stroke(color(0, 255, 0));
+     fill(color(150, 200, 150));
+    }
   } else if (trials[current_trial + 1] === i) {
     noStroke();
     fill(color(50, 97, 50));
@@ -307,7 +313,6 @@ function drawTarget(i) {
   circle(target.x, target.y, target.w);
 
   // Draw the input area target
-  noStroke();
   rect(
     map(box.x, 0, width, inputArea.x, inputArea.x + inputArea.w) + 1,
     map(box.y, 0, height, inputArea.y, inputArea.y + inputArea.h) + 1,
@@ -435,7 +440,10 @@ function drawInputArea() {
 
 // Responsible for drawing the guide
 function drawGuide() {
-  let origin = { x: inputArea.x + TARGET_SIZE, y: inputArea.y - TARGET_SIZE * 1 };
+  let origin = {
+    x: inputArea.x + TARGET_SIZE,
+    y: inputArea.y - TARGET_SIZE * 1,
+  };
 
   // Current target
   stroke(color(0, 255, 0));
@@ -461,6 +469,6 @@ function drawGuide() {
   fill(color(255, 255, 255));
   noStroke();
   text("Current Target", origin.x, origin.y - TARGET_SIZE);
-  text("Next Target", origin.x  + TARGET_SIZE * 3, origin.y - TARGET_SIZE);
+  text("Next Target", origin.x + TARGET_SIZE * 3, origin.y - TARGET_SIZE);
   text("Double Click", origin.x + TARGET_SIZE * 6, origin.y - TARGET_SIZE);
 }
