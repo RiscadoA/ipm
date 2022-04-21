@@ -6,7 +6,7 @@
 // p5.js reference: https://p5js.org/reference/
 
 // Database (CHANGE THESE!)
-const GROUP_NUMBER = 48; // Add your group number here as an integer (e.g., 2, 3)
+const GROUP_NUMBER = "48-AL"; // Add your group number here as an integer (e.g., 2, 3)
 const BAKE_OFF_DAY = false; // Set to 'true' before sharing during the bake-off day
 const ITERATION = 6;
 
