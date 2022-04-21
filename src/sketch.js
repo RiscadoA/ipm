@@ -293,7 +293,7 @@ function drawTarget(i) {
       fill(color(150, 255, 150));
     } else {
       stroke(color(0, 255, 0));
-     fill(color(150, 200, 150));
+      fill(color(150, 200, 150));
     }
   } else if (trials[current_trial + 1] === i) {
     noStroke();
@@ -471,4 +471,17 @@ function drawGuide() {
   text("Current Target", origin.x, origin.y - TARGET_SIZE);
   text("Next Target", origin.x + TARGET_SIZE * 3, origin.y - TARGET_SIZE);
   text("Double Click", origin.x + TARGET_SIZE * 6, origin.y - TARGET_SIZE);
+
+  // Hints
+  textSize(20);
+  text(
+    "Using the rectangle above can get you better scores!",
+    origin.x + TARGET_SIZE * 3,
+    inputArea.y + inputArea.h + 22
+  );
+  text(
+    "If you miss more than 2 times, you'll be heavily penalized, so be careful!",
+    origin.x + TARGET_SIZE * 3,
+    inputArea.y + inputArea.h + 42
+  );
 }
